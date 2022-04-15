@@ -1,24 +1,34 @@
-import { Button, Grid, TextField } from '@mui/material';
+import { Avatar, Button, Grid, TextField } from '@mui/material';
+import { Box } from '@mui/system';
 import React, { useContext, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { collection } from 'firebase/firestore';
+import { collection, orderBy, query, addDoc, serverTimestamp } from 'firebase/firestore';
+
 import { Context } from '..';
 
 const Chat = () => {
-  const { auth } = useContext(Context);
-  const [user] = useAuthState(auth);
   const [value, setValue] = useState('');
-  const [message, loading] = useCollectionData(collection('messages'));
 
-  const sendMessage = () => {
-    collection('messages').add({
-      uid: user.id,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      text: value,
-      createAt: 0,
-    });
+  const { auth, db } = useContext(Context);
+  const [user] = useAuthState(auth);
+  const messagesRef = collection(db, 'messages');
+  const q = query(messagesRef, orderBy('createAt'));
+  const [messages] = useCollectionData(q);
+
+  const sendMessage = async () => {
+    let i = 0;
+    if (value) {
+      addDoc(messagesRef, {
+        uid: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        text: value,
+        createAt: serverTimestamp(),
+      });
+      i++;
+      setValue('');
+    }
   };
 
   return (
@@ -29,11 +39,38 @@ const Chat = () => {
           height: '80vh',
           border: '1px solid gray',
           overflowY: 'auto',
-        }}></div>{' '}
-      <Grid container flexDirection={'column'} alignItems={'flex-end'} style={{ width: '70%' }}>
+        }}>
+        {messages &&
+          messages.map((message, i) => (
+            <div
+              key={i}
+              style={{
+                margin: 10,
+                marginLeft: user.uid === message.uid ? 'auto' : '10px',
+                width: 'fit-content',
+              }}>
+              <Grid
+                container
+                style={{
+                  justifyContent: user.uid === message.uid ? 'flex-end' : 'flex-start',
+                }}>
+                <Avatar src={message.photoURL}></Avatar>
+                <Box>{message.displayName}</Box>
+              </Grid>
+              <Box>{message.text}</Box>
+            </div>
+          ))}
+      </div>
+      <Grid
+        container
+        gap={'1rem'}
+        flexDirection={'row'}
+        wrap={'no-wrap'}
+        alignItems={'center'}
+        style={{ width: '70%' }}>
         <TextField
           fullWidth
-          variant='outlined'
+          variant='standard'
           maxRows={2}
           value={value}
           onChange={e => setValue(e.target.value)}

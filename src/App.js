@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <Navbar />
-      {user ? <AppRouters /> : <Loader />}
+      <AppRouters />
     </>
   );
 }

@@ -9,8 +9,8 @@ const Login = () => {
 
   const login = async () => {
     const { user } = await signInWithPopup(auth, provider);
-    console.log(user);
   };
+
   return (
     <Container>
       <Grid
