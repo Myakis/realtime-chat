@@ -1,23 +1,23 @@
-import { Avatar, Button, Grid, TextField } from '@mui/material';
-import { Box } from '@mui/system';
+import { Button, Grid, TextField } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { collection, orderBy, query, addDoc, serverTimestamp } from 'firebase/firestore';
 
 import { Context } from '..';
+import Loader from './Loader';
+import Message from './Message';
 
 const Chat = () => {
   const [value, setValue] = useState('');
-
   const { auth, db } = useContext(Context);
   const [user] = useAuthState(auth);
+
   const messagesRef = collection(db, 'messages');
   const q = query(messagesRef, orderBy('createAt'));
-  const [messages] = useCollectionData(q);
+  const [messages, loading] = useCollectionData(q);
 
   const sendMessage = async () => {
-    let i = 0;
     if (value) {
       addDoc(messagesRef, {
         uid: user.uid,
@@ -26,10 +26,13 @@ const Chat = () => {
         text: value,
         createAt: serverTimestamp(),
       });
-      i++;
       setValue('');
     }
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Grid container style={{ height: window.innerHeight - 50 }} justifyContent={'center'}>
@@ -37,37 +40,18 @@ const Chat = () => {
         style={{
           width: '70%',
           height: '80vh',
-          border: '1px solid gray',
+          background: 'rgba(105, 105, 105, .2)',
           overflowY: 'auto',
         }}>
-        {messages &&
-          messages.map((message, i) => (
-            <div
-              key={i}
-              style={{
-                margin: 10,
-                marginLeft: user.uid === message.uid ? 'auto' : '10px',
-                width: 'fit-content',
-              }}>
-              <Grid
-                container
-                style={{
-                  justifyContent: user.uid === message.uid ? 'flex-end' : 'flex-start',
-                }}>
-                <Avatar src={message.photoURL}></Avatar>
-                <Box>{message.displayName}</Box>
-              </Grid>
-              <Box>{message.text}</Box>
-            </div>
-          ))}
+        {messages && <Message messages={messages} user={user} />}
       </div>
       <Grid
         container
         gap={'1rem'}
         flexDirection={'row'}
-        wrap={'no-wrap'}
+        wrap={'nowrap'}
         alignItems={'center'}
-        style={{ width: '70%' }}>
+        style={{ width: '70%', marginTop: 10 }}>
         <TextField
           fullWidth
           variant='standard'

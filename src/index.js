@@ -21,6 +21,7 @@ const app = initializeApp({
   appId: '1:541598993127:web:514a9dab6fa8d4fe897042',
   measurementId: 'G-5J4ZRCJZQ2',
 });
+
 const db = getFirestore(app);
 export const Context = React.createContext(null);
 

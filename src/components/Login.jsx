@@ -2,6 +2,7 @@ import { Button, Container, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useContext } from 'react';
 import { signInWithPopup } from 'firebase/auth';
+
 import { Context } from '..';
 
 const Login = () => {

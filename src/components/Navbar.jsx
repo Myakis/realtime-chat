@@ -1,4 +1,4 @@
-import { AppBar, Button, Grid, Toolbar } from '@mui/material';
+import { AppBar, Avatar, Button, Grid, Toolbar } from '@mui/material';
 import React, { useContext } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link } from 'react-router-dom';
@@ -11,9 +11,10 @@ const Navbar = () => {
   const [user] = useAuthState(auth);
 
   return (
-    <AppBar position='static' color={'secondary'}>
+    <AppBar position='static' color={'primary'}>
       <Toolbar variant='dense'>
         <Grid container justifyContent={'flex-end'}>
+          {user && <Avatar src={user.photoURL} />}
           {user ? (
             <Button onClick={() => signOut(auth)} variant='dense'>
               Выйти
