@@ -21,7 +21,7 @@ const Login = () => {
         justifyContent={'center'}>
         <Grid
           container
-          style={{ width: 500, background: 'lightgray' }}
+          style={{ width: 500, background: 'white', borderRadius: 20 }}
           justifyContent={'center'}
           flexDirection={'column'}>
           <Box p={5} textAlign={'center'}>

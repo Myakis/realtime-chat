@@ -18,6 +18,8 @@ const Message = ({ messages, user }) => {
             alignItems={'center'}
             style={{
               justifyContent: user.uid === message.uid ? 'flex-end' : 'flex-start',
+              flexDirection: user.uid === message.uid ? 'row-reverse' : 'row',
+              gap: ' 0.5rem',
             }}>
             <Avatar src={message.photoURL}></Avatar>
             <Box>{message.displayName}</Box>

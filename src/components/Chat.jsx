@@ -40,8 +40,9 @@ const Chat = () => {
         style={{
           width: '70%',
           height: '80vh',
-          background: 'rgba(105, 105, 105, .2)',
+          background: '#fff',
           overflowY: 'auto',
+          borderRadius: ' 0 0 20px 20px',
         }}>
         {messages && <Message messages={messages} user={user} />}
       </div>
@@ -59,7 +60,13 @@ const Chat = () => {
           value={value}
           onChange={e => setValue(e.target.value)}
         />
-        <Button variant='outlined' onClick={sendMessage}>
+        <Button
+          variant='outlined'
+          onClick={sendMessage}
+          style={{
+            color: '#000',
+            borderColor: '#000',
+          }}>
           Отправить
         </Button>
       </Grid>

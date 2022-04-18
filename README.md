@@ -1,4 +1,13 @@
-# Getting Started with Create React App
+# Чат в реальном времени
+
+## Авторизация через Google с помощью firebase
+
+### Используемый Stack
+
+- React
+- Material UI
+- react-firebase-hooks
+- Firebase
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
